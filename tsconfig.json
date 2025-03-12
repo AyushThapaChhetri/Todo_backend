@@ -1,0 +1,30 @@
+{
+  "compilerOptions": {
+    "outDir": "./dist", // Where compiled JS goes (optional for now)
+    // "rootDir": "./src", // Source folder
+
+    "target": "es5",
+    "lib": ["dom", "dom.iterable", "esnext"],
+    "allowJs": true,
+    "skipLibCheck": true,
+    "strict": true,
+    "forceConsistentCasingInFileNames": true,
+    // "noEmit": true,
+    "noEmit": false,
+    "esModuleInterop": true,
+    // "module": "esnext",
+    "module": "NodeNext",
+    // "moduleResolution": "node",
+    "moduleResolution": "nodenext",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "jsx": "preserve",
+    "incremental": true,
+    "baseUrl": "."
+    // "paths": {
+    //   "@controller/*": ["./src/controller/*"]
+    // }
+  },
+  "include": ["src/**/*"], // Include all files in src
+  "exclude": ["node_modules"] // Ignore node_modules
+}
