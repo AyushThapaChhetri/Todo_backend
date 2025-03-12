@@ -1,5 +1,5 @@
 import express from "express";
-import authRoutes from "./routing/auth.routes";
+import authRoutes from "./controller/routing/auth.routes";
 import cors from "cors";
 import dotenv from "dotenv";
 

@@ -1,8 +1,8 @@
 // import { signup } from "@controller/auth.controller";
-import { signup } from "../controller/auth.controller";
+import { signup } from "../auth.controller";
 import { Router } from "express";
 import { Request, Response } from "express";
-import { validate } from "../middlewares/validationMiddleware";
+import { validate } from "../../middlewares/validationMiddleware";
 import { signupValidationSchema } from "../validation/auth.validation";
 
 const router = Router();
