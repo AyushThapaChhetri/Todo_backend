@@ -1,14 +1,7 @@
-import express from "express";
-import authRoutes from "./controller/routing/auth.routes";
+import express, { NextFunction, Request, Response } from "express";
 import cors from "cors";
-import dotenv from "dotenv";
-
-// Load environment variables from .env
-dotenv.config();
-
-const environment = process.env.NODE_ENV || "DEV";
-const PORT = process.env.PORT || 5000;
-const FRONTEND_URL = process.env.FRONTEND_URL || "http://localhost:5173";
+import controllers from "./controller/routing/controllers";
+import { ENVIRONMENT, FRONTEND_URL, PORT } from "./config/config";
 
 const app = express();
 
@@ -23,7 +16,7 @@ const app = express();
 // Configure CORS
 app.use(
   cors({
-    origin: environment === "DEV" ? FRONTEND_URL : "https://*.ayush.com", // Adjust for production
+    origin: ENVIRONMENT === "DEV" ? FRONTEND_URL : "https://*.ayush.com", // Adjust for production
     methods: ["GET", "POST"], // Allowed methods
     allowedHeaders: ["Content-Type"], // Allowed headers
   })
@@ -36,7 +29,16 @@ app.use(express.urlencoded({ extended: false }));
 // app.use("/", authRoutes);
 
 // Use the auth routes
-app.use("/api", authRoutes);
+app.use("/api", ...controllers);
+
+// Global error-handling middleware with proper types
+app.use((err: any, req: Request, res: Response, next: NextFunction) => {
+  console.error("Global Error Handler:", err);
+  const status = err.statusCode || 500;
+  res.status(status).json({
+    message: err.message || "Something went wrong",
+  });
+});
 
 // Start the server
 // const PORT = 5000;

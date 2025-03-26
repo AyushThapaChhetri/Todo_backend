@@ -1,9 +1,9 @@
 {
   "name": "server",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
-    "start": "nodemon --exec ts-node src/server.ts",
+    "start": "nodemon -r tsconfig-paths/register src/server.ts",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
@@ -20,13 +20,16 @@
     "cors": "^2.8.5",
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
+    "jsonwebtoken": "^9.0.2",
     "nodemon": "^3.1.9",
     "prisma": "^6.4.1",
     "ts-node": "^10.9.2",
-    "typescript": "^5.8.2",
     "yup": "^1.6.1"
   },
   "devDependencies": {
-    "@types/dotenv": "^6.1.1"
+    "@types/dotenv": "^6.1.1",
+    "@types/jsonwebtoken": "^9.0.9",
+    "tsconfig-paths": "^4.2.0",
+    "typescript": "^5.8.2"
   }
 }
