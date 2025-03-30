@@ -44,7 +44,7 @@ class _AuthController extends BaseController {
     } = req.body;
 
     try {
-      const { user, token } = await AuthService.login({
+      const { user, accessToken, refreshToken } = await AuthService.login({
         email,
         password,
       });
@@ -53,7 +53,8 @@ class _AuthController extends BaseController {
         message: "Login successful",
         data: {
           user: UserDTO.single(user), // Convert user data using UserDTO
-          token, // Include the generated token
+          accessToken, // Include the generated token
+          refreshToken,
         },
       });
     } catch (error) {
@@ -77,6 +78,45 @@ class _AuthController extends BaseController {
     //   message: "Login data received successfully",
     //   data: loginCredentials,
     // });
+  }
+
+  async refresh(req: Request, res: Response) {
+    const { refreshToken } = req.body;
+    if (!refreshToken) {
+      throw new BadRequestError("Refresh token is required");
+    }
+
+    const { accessToken, refreshToken: newRefreshToken } =
+      await AuthService.refreshToken(refreshToken);
+
+    return super.postOk({
+      message: "Login successful",
+      data: {
+        accessToken, // Include the generated token
+        refreshToken: newRefreshToken,
+      },
+    });
+  }
+
+  async logout(req: Request, res: Response) {
+    // console.log("Delete controller");
+    const { refreshToken } = req.body;
+    // console.log("Refresh Token", refreshToken);
+
+    if (!refreshToken) {
+      // return res.status(400).json({ error: "Refresh token is required" });
+      throw new BadRequestError("Refresh token is required");
+    }
+
+    // Delete the refresh token from the database
+    await AuthService.deleteRefreshtoken(refreshToken);
+    // await RefreshTokenRepository.deleteByToken(refreshToken);
+
+    // return res.status(200).json({ message: "Logged out successfully" });
+    return super.postOk({
+      message: "Logged out successfully",
+      data: {},
+    });
   }
 
   // /me -> return the logged in user

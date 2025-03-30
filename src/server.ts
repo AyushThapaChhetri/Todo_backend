@@ -18,7 +18,7 @@ app.use(
   cors({
     origin: ENVIRONMENT === "DEV" ? FRONTEND_URL : "https://*.ayush.com", // Adjust for production
     methods: ["GET", "POST"], // Allowed methods
-    allowedHeaders: ["Content-Type"], // Allowed headers
+    allowedHeaders: ["Content-Type", "Authorization"], // Allowed headers
   })
 );
 // Middleware to parse JSON bodies
