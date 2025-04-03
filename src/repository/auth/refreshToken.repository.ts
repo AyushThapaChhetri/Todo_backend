@@ -3,7 +3,7 @@ import BaseRepository from "../contract/baseRepository";
 
 class RefreshTokenRepository extends BaseRepository {
   static async create(userId: number, token: string, expiresAt: Date) {
-    return prisma.refreshToken.create({
+    return await prisma.refreshToken.create({
       data: {
         userId,
         token,

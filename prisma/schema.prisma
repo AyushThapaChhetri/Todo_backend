@@ -7,6 +7,17 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+// CREATE TABLE "User" (
+//     "id" SERIAL PRIMARY KEY,
+//     "uid" UUID DEFAULT gen_random_uuid() NOT NULL,
+//     "fullName" TEXT NOT NULL,
+//     "email" TEXT UNIQUE NOT NULL,
+//     "password" TEXT NOT NULL,
+//     "gender" TEXT NOT NULL,
+//     "dob" TIMESTAMP NOT NULL,
+//     "createdAt" TIMESTAMP DEFAULT NOW() NOT NULL
+// );
+
 model User {
   id Int @id @default(autoincrement())
   uid        String  @default(uuid())
@@ -17,7 +28,19 @@ model User {
   dob       DateTime
   createdAt DateTime @default(now())
   refreshTokens RefreshToken[]
+  todos         Todo[]        // Added relation to Todo
 }
+
+
+// CREATE TABLE "RefreshToken" (
+//     "rid" UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+//     "userId" INTEGER NOT NULL,
+//     "token" TEXT UNIQUE NOT NULL,
+//     "expiresAt" TIMESTAMP NOT NULL,
+//     "createdAt" TIMESTAMP DEFAULT NOW() NOT NULL,
+//     CONSTRAINT fk_refreshToken_user FOREIGN KEY ("userId") 
+//         REFERENCES "User"("id") ON DELETE CASCADE
+// );
 
 model RefreshToken{
   rid String @id @default(uuid())
@@ -27,4 +50,38 @@ model RefreshToken{
   createdAt DateTime @default(now())
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+// CREATE TABLE "Todo" (
+//     "id" BIGSERIAL PRIMARY KEY,
+//     "projectName" TEXT NOT NULL,
+//     "taskName" TEXT NOT NULL,
+//     "priority" TEXT NOT NULL,
+//     "progressStatus" TEXT NOT NULL,
+//     "startDate" TEXT DEFAULT '',
+//     "endDate" TEXT DEFAULT '',
+//     "hoursTime" TEXT DEFAULT '0',
+//     "minutesTime" TEXT DEFAULT '0',
+//     "secondsTime" TEXT DEFAULT '0',
+//     "userId" INTEGER NOT NULL,
+//     "createdAt" TIMESTAMP DEFAULT NOW() NOT NULL,
+//     CONSTRAINT fk_todo_user FOREIGN KEY ("userId") 
+//         REFERENCES "User"("id") ON DELETE CASCADE
+// );
+
+
+model Todo {
+  id             BigInt    @id @default(autoincrement())
+  projectName    String
+  taskName       String
+  priority       String    // e.g., "low", "medium", "high"
+  progressStatus String    // e.g., "todo", "progress", "completed"
+  startDate      String    @default("")
+  endDate        String    @default("")
+  hoursTime      String    @default("0")
+  minutesTime    String    @default("0")
+  secondsTime    String    @default("0")
+  userId         Int
+  user           User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt      DateTime  @default(now())
 }
