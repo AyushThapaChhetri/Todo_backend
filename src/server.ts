@@ -3,6 +3,8 @@ import cors from "cors";
 import controllers from "./controller/routing/controllers";
 import { ENVIRONMENT, FRONTEND_URL, PORT } from "./config/config";
 
+// Node.js comes with a built-in module called http, but it requires a lot of code to create a server.
+// Express simplifies this process by providing an easier way to handle requests, routes, and middleware.
 const app = express();
 
 // const cors = require("cors");
@@ -14,15 +16,21 @@ const app = express();
 // );
 
 // Configure CORS
+// It allows your frontend (React, Vue, etc.) to communicate with your backend (Express API) even if they are running on different domains.
 app.use(
   cors({
     origin: ENVIRONMENT === "DEV" ? FRONTEND_URL : "https://*.ayush.com", // Adjust for production
-    methods: ["GET", "POST"], // Allowed methods
-    allowedHeaders: ["Content-Type"], // Allowed headers
+    methods: ["GET", "POST", "PUT", "PATCH", "DELETE"], // Allowed methods
+    allowedHeaders: ["Content-Type", "Authorization"], // Allowed headers
   })
 );
 // Middleware to parse JSON bodies
 app.use(express.json());
+
+// It allows Express to understand application/x-www-form-urlencoded data.
+// extended: false?
+// false → Can only handle simple objects (key-value pairs).
+// true → Can handle nested objects
 app.use(express.urlencoded({ extended: false }));
 
 // Mount all routes (including "/") under "/api"

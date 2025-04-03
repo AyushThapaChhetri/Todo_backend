@@ -28,6 +28,14 @@ router.post(
   HttpErrorHandler.catch(AuthController.login)
 );
 
+router.post(
+  `${BASE_URL}/refresh`,
+  HttpErrorHandler.catch(AuthController.refresh)
+);
+router.post(
+  `${BASE_URL}/logout`,
+  HttpErrorHandler.catch(AuthController.logout)
+);
 router.get(
   `${BASE_URL}/me`,
   authenticateUser,
