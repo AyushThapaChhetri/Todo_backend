@@ -7,13 +7,18 @@ export const validate_schemas = (schema: Yup.ObjectSchema<any>) => {
       await schema.validate(req.body, { abortEarly: false });
       next(); // Move to the next step if validation passes
     } catch (error) {
-      //   res.status(400).json({ error: (error as Yup.ValidationError).errors });
-      res.status(400).json({
+      const formattedErrors = Array.from(
+        new Map(
+          (error as Yup.ValidationError).inner.map((err) => [
+            err.path,
+            { field: err.path, message: err.message },
+          ])
+        ).values()
+      );
+
+      res.status(422).json({
         message: "Validation failed",
-        errors: (error as Yup.ValidationError).inner.map((err) => ({
-          field: err.path,
-          message: err.message,
-        })),
+        errors: formattedErrors,
       });
     }
   };

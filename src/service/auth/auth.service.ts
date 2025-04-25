@@ -1,5 +1,10 @@
 import prisma from "@app/config/db.config";
-import { BadRequestError } from "../contract/errors/errors";
+import {
+  BadRequestError,
+  UnauthorizedError,
+  UserAlreadyExistError,
+  UserNotFoundError,
+} from "../contract/errors/errors";
 import Hash from "src/libs/Hash";
 import { UserRepository } from "src/repository/auth/register.repository";
 import * as jwt from "jsonwebtoken";
@@ -23,7 +28,7 @@ class _AuthService {
 
     if (existingUser) {
       // Send error response and stop execution
-      throw new BadRequestError("Email already exists");
+      throw new UserAlreadyExistError("Email already exists");
     }
 
     const hashedPassword = await Hash.createHash(password);
@@ -45,7 +50,7 @@ class _AuthService {
     });
     if (!user) {
       console.log("Email donesn't exists: ", email);
-      throw new BadRequestError("Email donesn't exists: ", email);
+      throw new UserNotFoundError("Email donesn't exists: ", email);
       // throw
     }
     // console.log(password, user.password);
@@ -53,7 +58,7 @@ class _AuthService {
 
     if (!comparePassword) {
       // console.log("Incorrect password: ", user);
-      throw new BadRequestError("Incorrect Password");
+      throw new UnauthorizedError("Incorrect Password");
     } else {
       // console.log("Login successful for:", email);
       const accessToken = jwt.sign(
@@ -80,14 +85,14 @@ class _AuthService {
 
     if (!tokenRecord) {
       console.log("Invalid Refresh Token", tokenRecord);
-      throw new BadRequestError("Invalid Refresh Token ");
+      throw new UnauthorizedError("Invalid Refresh Token ");
     }
     console.log("Token found:", tokenRecord);
 
     if (tokenRecord.expiresAt < new Date()) {
       console.log("Refresh Token Expired");
       await RefreshTokenRepository.deleteByToken(refreshToken);
-      throw new BadRequestError("Refresh token expired");
+      throw new UnauthorizedError("Refresh token expired");
     }
 
     const user = await prisma.user.findUnique({
@@ -95,7 +100,7 @@ class _AuthService {
     });
 
     if (!user) {
-      throw new BadRequestError("User not found");
+      throw new UserNotFoundError("User not found");
     }
 
     console.log("Generating new access token...");
@@ -120,7 +125,14 @@ class _AuthService {
     return { accessToken: newAccessToken, refreshToken: newRefreshToken };
   }
 
-  async deleteRefreshtoken(refreshToken: string) {
+  async logout(refreshToken: string) {
+    const tokenRecord = await RefreshTokenRepository.findByToken(refreshToken);
+
+    if (!tokenRecord) {
+      throw new UnauthorizedError(
+        "Refresh token not found or already invalidated"
+      );
+    }
     await RefreshTokenRepository.deleteByToken(refreshToken);
   }
 }

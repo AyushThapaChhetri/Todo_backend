@@ -36,3 +36,7 @@ export const loginValidationSchema = BaseYup.object({
   emailPassword: BaseYup.string().required("Please Enter Password"),
   emailRemember: BaseYup.bool(),
 });
+
+export const refreshTokenValidationSchema = BaseYup.object({
+  refreshToken: BaseYup.string().required("Refresh token is required"),
+});

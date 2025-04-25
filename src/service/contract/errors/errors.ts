@@ -20,6 +20,21 @@ export class UnauthorizedError extends BaseServerError {
     super(401, message, log);
   }
 }
+export class UserNotFoundError extends BaseServerError {
+  constructor(message: string, log?: Object) {
+    super(404, message, log);
+  }
+}
+export class UserAlreadyExistError extends BaseServerError {
+  constructor(message: string, log?: Object) {
+    super(409, message, log);
+  }
+}
+export class ValidationError extends BaseServerError {
+  constructor(message: string, log?: Object) {
+    super(422, message, log);
+  }
+}
 
 export class ServerError extends BaseServerError {
   constructor(log?: Object) {

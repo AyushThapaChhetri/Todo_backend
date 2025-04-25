@@ -1,7 +1,8 @@
 import express, { NextFunction, Request, Response } from "express";
 import cors from "cors";
 import controllers from "./controller/routing/controllers";
-import { ENVIRONMENT, FRONTEND_URL, PORT } from "./config/config";
+import { ENVIRONMENT, ALLOWED_ORIGINS, PORT } from "./config/config";
+const { swaggerUi, swaggerSpec } = require("../swagger");
 
 // Node.js comes with a built-in module called http, but it requires a lot of code to create a server.
 // Express simplifies this process by providing an easier way to handle requests, routes, and middleware.
@@ -14,16 +15,45 @@ const app = express();
 //     environment == "DEV" ? "http://192.168.1.89:5173" : "https://*.ayush.com"
 //   )
 // );
+// const allowedOrigins = ["http://localhost:5173", "http://192.168.1.102:5173"];
 
 // Configure CORS
 // It allows your frontend (React, Vue, etc.) to communicate with your backend (Express API) even if they are running on different domains.
+// console.log(ALLOWED_ORIGINS);
+// before
+
+//   cors({
+//     origin: ENVIRONMENT === "DEV" ? FRONTEND_URL : "https://*.ayush.com",
+//     methods: ["GET", "POST", "PUT", "PATCH", "DELETE"], // Allowed methods
+//     allowedHeaders: ["Content-Type", "Authorization"], // Allowed headers
+//   })
+// );
+
+// app.use(
+//   cors({
+//     origin: function (origin, callback) {
+//       if (!origin || ALLOWED_ORIGINS.includes(origin)) {
+//         callback(null, true);
+//       } else {
+//         callback(new Error("Not allowed by CORS"));
+//       }
+//     },
+//     credentials: true,
+//     methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
+//     allowedHeaders: ["Content-Type", "Authorization"],
+//   })
+// );
+
 app.use(
   cors({
-    origin: ENVIRONMENT === "DEV" ? FRONTEND_URL : "https://*.ayush.com", // Adjust for production
+    origin: "*", // or use '*' for dev only
+    credentials: true, // if using cookies/sessions
     methods: ["GET", "POST", "PUT", "PATCH", "DELETE"], // Allowed methods
     allowedHeaders: ["Content-Type", "Authorization"], // Allowed headers
   })
 );
+// Then use it like this:
+// app.use(customCors);
 // Middleware to parse JSON bodies
 app.use(express.json());
 
@@ -39,6 +69,9 @@ app.use(express.urlencoded({ extended: false }));
 // Use the auth routes
 app.use("/api", ...controllers);
 
+// Add Swagger UI at /api-docs
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+
 // Global error-handling middleware with proper types
 app.use((err: any, req: Request, res: Response, next: NextFunction) => {
   console.error("Global Error Handler:", err);
@@ -48,9 +81,21 @@ app.use((err: any, req: Request, res: Response, next: NextFunction) => {
   });
 });
 
+app.listen(PORT as number, "0.0.0.0", () => {
+  console.log(`Server running on http://0.0.0.0:${PORT}`);
+  console.log("Server running on http://localhost:5000");
+  console.log("Swagger docs at http://localhost:5000/api-docs");
+});
+
+// app.listen(5000, "0.0.0.0", () => {
+//   console.log(`API listening on http://0.0.0.0:${PORT}`);
+// });
+
 // Start the server
 // const PORT = 5000;
 // const PORT = 5173;
-app.listen(PORT, () => {
-  console.log(`Server running on http://localhost:${PORT}`);
-});
+// app.listen(PORT, () => {
+//   console.log(`Server running on http://localhost:${PORT}`);
+// });
+
+export default app;

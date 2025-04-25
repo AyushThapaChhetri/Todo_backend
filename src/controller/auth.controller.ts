@@ -2,7 +2,11 @@ import { NextFunction, Request, Response } from "express";
 import BaseController from "./contract/baseController.contract";
 import { AuthService } from "src/service/auth/auth.service";
 import { UserDTO } from "src/dto/user/user.dto";
-import { BadRequestError } from "@app/service/contract/errors/errors";
+import {
+  BadRequestError,
+  UnauthorizedError,
+  UserNotFoundError,
+} from "@app/service/contract/errors/errors";
 // import { BadRequestError } from "@app/service/contract/errors/errors";
 // import { loginValidationSchema } from "./validation/auth.validation";
 // import { validate_schemas } from "@app/middlewares/validationMiddleware";
@@ -66,6 +70,20 @@ class _AuthController extends BaseController {
           data: { message: error.message },
         };
       }
+      if (error instanceof UnauthorizedError) {
+        // If error is a BadRequestError, send appropriate response
+        return {
+          statusCode: 401,
+          data: { message: error.message },
+        };
+      }
+      if (error instanceof UserNotFoundError) {
+        // If error is a BadRequestError, send appropriate response
+        return {
+          statusCode: 404,
+          data: { message: error.message },
+        };
+      }
 
       // Handle other errors (if any)
       return {
@@ -109,7 +127,7 @@ class _AuthController extends BaseController {
     }
 
     // Delete the refresh token from the database
-    await AuthService.deleteRefreshtoken(refreshToken);
+    await AuthService.logout(refreshToken);
     // await RefreshTokenRepository.deleteByToken(refreshToken);
 
     // return res.status(200).json({ message: "Logged out successfully" });

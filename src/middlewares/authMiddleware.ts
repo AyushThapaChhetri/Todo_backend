@@ -11,15 +11,32 @@ export const authenticateUser = async (
   res: Response,
   next: NextFunction
 ) => {
-  // 1. Get token from the Headers, Extract token from header
-  // const token = req.headers.authorization;
+  // // 1. Get token from the Headers, Extract token from header
+  // const authHeader = req.headers.authorization;
 
-  const token = req.headers.authorization?.split(" ")[1]; // Extract only the token
+  // console.log("AuthHeader: ", authHeader);
+
+  // if (!authHeader || !authHeader.startsWith("Bearer ")) {
+  //   throw new UnauthorizedError("Unauthorized: No token provided");
+  // }
+
+  // const token = authHeader.split(" ")[1]; // ExtractS only the token
+  // console.log("Token middleware: ", token);
+
   // 2.If token is not present, throw an error of unauthorized
-  if (!token) {
-    return next(new UnauthorizedError("Unauthorized: No token provided"));
-  }
+  // if (!token) {
+  //   return next(new UnauthorizedError("Unauthorized: No token provided"));
+  // }
   try {
+    const authHeader = req.headers.authorization;
+    console.log("AuthHeader: ", authHeader);
+
+    if (!authHeader || !authHeader.startsWith("Bearer ")) {
+      return next(new UnauthorizedError("Unauthorized: No token provided"));
+    }
+
+    const token = authHeader.split(" ")[1];
+    console.log("Token middleware: ", token);
     // 3. If the token is present, verify that token and extract the payload
     const payload = jwt.verify(token, JWT_SECRET) as any;
     console.log(payload);
