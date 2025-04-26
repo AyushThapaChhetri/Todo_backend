@@ -1,4 +1,18 @@
-import { NextFunction, Request, Response } from "express";
+import {
+  Body,
+  Controller,
+  Example,
+  Get,
+  Middlewares,
+  Path,
+  Post,
+  Query,
+  Response,
+  Route,
+  SuccessResponse,
+  Tags,
+} from "tsoa";
+// import { NextFunction, Request, Response } from "express";
 import BaseController from "./contract/baseController.contract";
 import { AuthService } from "src/service/auth/auth.service";
 import { UserDTO } from "src/dto/user/user.dto";
@@ -7,17 +21,40 @@ import {
   UnauthorizedError,
   UserNotFoundError,
 } from "@app/service/contract/errors/errors";
-// import { BadRequestError } from "@app/service/contract/errors/errors";
-// import { loginValidationSchema } from "./validation/auth.validation";
-// import { validate_schemas } from "@app/middlewares/validationMiddleware";
+import { SignupResponse, UserResponseData } from "../dto/user/UserResponse.dto";
+import { SignupRequest } from "../dto/user/SignupRequest.dto";
+import { ErrorResponse } from "../dto/Error/ErrorResponse.dto";
+import {
+  loginValidationSchema,
+  refreshTokenValidationSchema,
+  signupValidationSchema,
+} from "./validation/auth.validation";
+import { validate_schemas } from "../middlewares/validationMiddleware";
+import { ValidationErrorResponse } from "../dto/Error/ValidationErrorResponse.dto";
+import { BadRequestErrorResponse } from "../dto/Error/BadRequestErrorResponse.dto";
+import { UnauthorizedErrorResponse } from "../dto/Error/UnauthorizedErrorResponse.dto";
+import { UserNotFoundErrorResponse } from "../dto/Error/UserNotFoundErrorResponse.dto";
+import { InternalErrorResponse } from "../dto/Error/InternalErrorResponse.dto";
+import { LoginResponse } from "../dto/user/LoginResponse.dto";
+import { LoginRequest } from "../dto/user/LoginRequest.dto";
 
-class _AuthController extends BaseController {
-  async signup(req: Request) {
-    const signupData = req.body; // Data sent from frontend
-    console.log("Signup Data Received:", signupData);
-
-    // Extract fields from signupData}): Promise<{
-
+@Route("api/auth")
+@Tags("Auth")
+export class _AuthController extends BaseController {
+  @Response<ErrorResponse>(409, "Conflict - email already registered")
+  @Response<ValidationErrorResponse>(
+    422,
+    "Unprocessable Entity – validation errors",
+    {
+      message: "Validation failed",
+      errors: [{ field: "emailName", message: "Please Enter Email" }],
+    }
+  )
+  @Post("signup")
+  @Middlewares(validate_schemas(signupValidationSchema))
+  public async signup(
+    @Body() signupData: SignupRequest
+  ): Promise<SignupResponse> {
     const {
       fullName,
       emailName: email, // Rename emailName to email to match schema
@@ -41,56 +78,66 @@ class _AuthController extends BaseController {
     });
   }
 
-  async login(req: Request, res: Response) {
-    const {
-      emailName: email, // Rename emailName to email to match schema
-      emailPassword: password,
-    } = req.body;
+  @SuccessResponse("200", "Login successful")
+  @Response<BadRequestErrorResponse>(400, "Invalid input")
+  @Response<UnauthorizedErrorResponse>(401, "Unauthorized – wrong credentials")
+  @Response<UserNotFoundErrorResponse>(404, "User not found")
+  @Response<ValidationErrorResponse>(422, "Validation error")
+  @Response<InternalErrorResponse>(500, "Internal server error")
+  @Middlewares(validate_schemas(loginValidationSchema))
+  // async login(req: Request, res: Response) {
+  @Post("login")
+  public async login(@Body() loginData: LoginRequest): Promise<LoginResponse> {
+    const { emailName: email, emailPassword: password } = loginData;
+    // const {
+    //   emailName: email, // Rename emailName to email to match schema
+    //   emailPassword: password,
+    // } = req.body;
 
-    try {
-      const { user, accessToken, refreshToken } = await AuthService.login({
-        email,
-        password,
-      });
+    // try {
+    const { user, accessToken, refreshToken } = await AuthService.login({
+      email,
+      password,
+    });
 
-      return super.postOk({
-        message: "Login successful",
-        data: {
-          user: UserDTO.single(user), // Convert user data using UserDTO
-          accessToken, // Include the generated token
-          refreshToken,
-        },
-      });
-    } catch (error) {
-      // Handle error if login fails (e.g., incorrect credentials)
-      if (error instanceof BadRequestError) {
-        // If error is a BadRequestError, send appropriate response
-        return {
-          statusCode: 400,
-          data: { message: error.message },
-        };
-      }
-      if (error instanceof UnauthorizedError) {
-        // If error is a BadRequestError, send appropriate response
-        return {
-          statusCode: 401,
-          data: { message: error.message },
-        };
-      }
-      if (error instanceof UserNotFoundError) {
-        // If error is a BadRequestError, send appropriate response
-        return {
-          statusCode: 404,
-          data: { message: error.message },
-        };
-      }
+    return super.postOk({
+      message: "Login successful",
+      data: {
+        user: UserDTO.single(user), // Convert user data using UserDTO
+        accessToken, // Include the generated token
+        refreshToken,
+      },
+    });
+    // } catch (error) {
+    //   // Handle error if login fails (e.g., incorrect credentials)
+    //   if (error instanceof BadRequestError) {
+    //     // If error is a BadRequestError, send appropriate response
+    //     return {
+    //       statusCode: 400,
+    //       data: { message: error.message },
+    //     };
+    //   }
+    //   if (error instanceof UnauthorizedError) {
+    //     // If error is a BadRequestError, send appropriate response
+    //     return {
+    //       statusCode: 401,
+    //       data: { message: error.message },
+    //     };
+    //   }
+    //   if (error instanceof UserNotFoundError) {
+    //     // If error is a BadRequestError, send appropriate response
+    //     return {
+    //       statusCode: 404,
+    //       data: { message: error.message },
+    //     };
+    //   }
 
-      // Handle other errors (if any)
-      return {
-        statusCode: 500,
-        data: { message: "Something went wrong!" },
-      };
-    }
+    //   // Handle other errors (if any)
+    //   return {
+    //     statusCode: 500,
+    //     data: { message: "Something went wrong!" },
+    //   };
+    // }
 
     // return super.postOk({
     //   message: "Login data received successfully",
@@ -98,8 +145,16 @@ class _AuthController extends BaseController {
     // });
   }
 
-  async refresh(req: Request, res: Response) {
-    const { refreshToken } = req.body;
+  // async refresh(req: Request, res: Response) {
+  // const { refreshToken } = req.body;
+
+  @Middlewares(validate_schemas(refreshTokenValidationSchema))
+  @Post("refresh")
+  public async refresh(
+    @Body() refreshData: { refreshToken: string }
+  ): Promise<any> {
+    const { refreshToken } = refreshData;
+
     if (!refreshToken) {
       throw new BadRequestError("Refresh token is required");
     }
@@ -116,11 +171,15 @@ class _AuthController extends BaseController {
     });
   }
 
-  async logout(req: Request, res: Response) {
-    // console.log("Delete controller");
-    const { refreshToken } = req.body;
-    // console.log("Refresh Token", refreshToken);
-
+  // async logout(req: Request, res: Response) {
+  //   // console.log("Delete controller");
+  //   const { refreshToken } = req.body;
+  // console.log("Refresh Token", refreshToken);
+  @Post("logout")
+  public async logout(
+    @Body() logoutData: { refreshToken: string }
+  ): Promise<any> {
+    const { refreshToken } = logoutData;
     if (!refreshToken) {
       // return res.status(400).json({ error: "Refresh token is required" });
       throw new BadRequestError("Refresh token is required");
@@ -138,17 +197,26 @@ class _AuthController extends BaseController {
   }
 
   // /me -> return the logged in user
-  async me(req: Request, res: Response, next: NextFunction) {
-    // console.log(req.user!);
-    if (!req.user) {
-      throw new BadRequestError("User not found or not authenticated");
-    }
+  // async me(req: Request, res: Response, next: NextFunction) {
+  //   // console.log(req.user!);
+  //   if (!req.user) {
+  //     throw new BadRequestError("User not found or not authenticated");
+  //   }
 
-    return super.getOk({
-      message: "Profile Details Fetched successfully",
-      data: UserDTO.single(req.user),
-    });
-  }
+  //   return super.getOk({
+  //     message: "Profile Details Fetched successfully",
+  //     data: UserDTO.single(req.user),
+  //   });
+  // }
+  // @Security('jwt')
+  // @Get('me')
+  // public async me(@Header('Authorization') authHeader: string): Promise<any> {
+  //   const token = authHeader?.split(' ')[1];
+  //   if (!token) throw new UnauthorizedError('Unauthorized');
+  //   const user = await AuthService.validateToken(token);
+  //   if (!user) throw new BadRequestError('User not found or not authenticated');
+  //   return this.getOk({ message: 'Profile Details Fetched successfully', data: UserDTO.single(user) });
+  // }
 }
 
-export const AuthController = new _AuthController();
+// export const AuthController = new _AuthController();

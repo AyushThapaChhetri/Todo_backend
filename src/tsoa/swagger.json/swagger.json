@@ -1,0 +1,539 @@
+{
+	"openapi": "3.0.0",
+	"components": {
+		"examples": {},
+		"headers": {},
+		"parameters": {},
+		"requestBodies": {},
+		"responses": {},
+		"schemas": {
+			"UserResponseData": {
+				"properties": {
+					"fullName": {
+						"type": "string",
+						"example": "John Doe"
+					},
+					"email": {
+						"type": "string",
+						"example": "john.doe@example.com"
+					},
+					"gender": {
+						"type": "string",
+						"example": "male"
+					},
+					"dob": {
+						"type": "string",
+						"example": "1995-06-15T00:00:00.000Z"
+					},
+					"createdAt": {
+						"type": "string",
+						"example": "2025-04-25T12:34:56.789Z"
+					}
+				},
+				"required": [
+					"fullName",
+					"email",
+					"gender",
+					"dob",
+					"createdAt"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"SignupResponse": {
+				"properties": {
+					"statusCode": {
+						"type": "number",
+						"format": "double",
+						"example": 200
+					},
+					"message": {
+						"type": "string",
+						"example": "User created successfully"
+					},
+					"data": {
+						"$ref": "#/components/schemas/UserResponseData"
+					}
+				},
+				"required": [
+					"statusCode",
+					"message",
+					"data"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ErrorResponse": {
+				"properties": {
+					"message": {
+						"type": "string",
+						"description": "A human-readable message explaining the error",
+						"example": "Email already exists"
+					}
+				},
+				"required": [
+					"message"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"FieldError": {
+				"properties": {
+					"field": {
+						"type": "string",
+						"description": "Name of the invalid field",
+						"example": "emailName"
+					},
+					"message": {
+						"type": "string",
+						"description": "Error message for this field",
+						"example": "Please Enter Email"
+					}
+				},
+				"required": [
+					"field",
+					"message"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ValidationErrorResponse": {
+				"properties": {
+					"message": {
+						"type": "string",
+						"description": "General error message",
+						"example": "Validation failed"
+					},
+					"errors": {
+						"items": {
+							"$ref": "#/components/schemas/FieldError"
+						},
+						"type": "array",
+						"description": "Detailed list of field errors"
+					}
+				},
+				"required": [
+					"message",
+					"errors"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"SignupRequest": {
+				"properties": {
+					"fullName": {
+						"type": "string",
+						"example": "hero"
+					},
+					"emailName": {
+						"type": "string",
+						"example": "hero@gmail.com"
+					},
+					"emailPassword": {
+						"type": "string",
+						"example": "lafsU*sdf9dl"
+					},
+					"emailConfirmPassword": {
+						"type": "string",
+						"example": "lafsU*sdf9dl"
+					},
+					"gender": {
+						"type": "string",
+						"enum": [
+							"male",
+							"female",
+							"other"
+						],
+						"example": "male"
+					},
+					"emailDob": {
+						"type": "string",
+						"example": "2025-03-05"
+					}
+				},
+				"required": [
+					"fullName",
+					"emailName",
+					"emailPassword",
+					"emailConfirmPassword",
+					"gender",
+					"emailDob"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"LoginResponseData": {
+				"properties": {
+					"user": {
+						"$ref": "#/components/schemas/UserResponseData",
+						"example": {
+							"fullName": "hero",
+							"email": "hero@gmail.com",
+							"gender": "male",
+							"dob": "2025-03-05T00:00:00.000Z",
+							"createdAt": "2025-04-25T12:34:56.789Z"
+						}
+					},
+					"accessToken": {
+						"type": "string",
+						"example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+					},
+					"refreshToken": {
+						"type": "string",
+						"example": "60c3bf5ccbbbfdbf5dc9ec94ecedada6b..."
+					}
+				},
+				"required": [
+					"user",
+					"accessToken",
+					"refreshToken"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"LoginResponse": {
+				"properties": {
+					"statusCode": {
+						"type": "number",
+						"format": "double",
+						"example": 200
+					},
+					"message": {
+						"type": "string",
+						"example": "Login successful"
+					},
+					"data": {
+						"$ref": "#/components/schemas/LoginResponseData"
+					}
+				},
+				"required": [
+					"statusCode",
+					"message",
+					"data"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"BadRequestErrorResponse": {
+				"properties": {
+					"message": {
+						"type": "string",
+						"example": "Invalid input"
+					}
+				},
+				"required": [
+					"message"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"UnauthorizedErrorResponse": {
+				"properties": {
+					"error": {
+						"type": "string",
+						"example": "Invalid email or password"
+					}
+				},
+				"required": [
+					"error"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"UserNotFoundErrorResponse": {
+				"properties": {
+					"error": {
+						"type": "string",
+						"example": "User not found"
+					}
+				},
+				"required": [
+					"error"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"InternalErrorResponse": {
+				"properties": {
+					"message": {
+						"type": "string",
+						"example": "Internal server error"
+					}
+				},
+				"required": [
+					"message"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"LoginRequest": {
+				"properties": {
+					"emailName": {
+						"type": "string",
+						"example": "hero@gmail.com"
+					},
+					"emailPassword": {
+						"type": "string",
+						"example": "lafsU*sdf9dl"
+					},
+					"emailRemember": {
+						"type": "boolean",
+						"example": false
+					}
+				},
+				"required": [
+					"emailName",
+					"emailPassword",
+					"emailRemember"
+				],
+				"type": "object",
+				"additionalProperties": false
+			}
+		},
+		"securitySchemes": {
+			"jwt": {
+				"type": "apiKey",
+				"name": "Authorization",
+				"in": "header"
+			}
+		}
+	},
+	"info": {
+		"title": "server",
+		"version": "1.0.0",
+		"license": {
+			"name": "ISC"
+		},
+		"contact": {}
+	},
+	"paths": {
+		"/api/auth/signup": {
+			"post": {
+				"operationId": "Signup",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/SignupResponse"
+								}
+							}
+						}
+					},
+					"409": {
+						"description": "Conflict - email already registered",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorResponse"
+								}
+							}
+						}
+					},
+					"422": {
+						"description": "Unprocessable Entity – validation errors",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ValidationErrorResponse"
+								},
+								"examples": {
+									"Example 1": {
+										"value": {
+											"message": "Validation failed",
+											"errors": [
+												{
+													"field": "emailName",
+													"message": "Please Enter Email"
+												}
+											]
+										}
+									}
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Auth"
+				],
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/SignupRequest"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/api/auth/login": {
+			"post": {
+				"operationId": "Login",
+				"responses": {
+					"200": {
+						"description": "Login successful",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/LoginResponse"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Invalid input",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/BadRequestErrorResponse"
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "Unauthorized – wrong credentials",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/UnauthorizedErrorResponse"
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "User not found",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/UserNotFoundErrorResponse"
+								}
+							}
+						}
+					},
+					"422": {
+						"description": "Validation error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ValidationErrorResponse"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Internal server error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/InternalErrorResponse"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Auth"
+				],
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/LoginRequest"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/api/auth/refresh": {
+			"post": {
+				"operationId": "Refresh",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Auth"
+				],
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"properties": {
+									"refreshToken": {
+										"type": "string"
+									}
+								},
+								"required": [
+									"refreshToken"
+								],
+								"type": "object"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/api/auth/logout": {
+			"post": {
+				"operationId": "Logout",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Auth"
+				],
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"properties": {
+									"refreshToken": {
+										"type": "string"
+									}
+								},
+								"required": [
+									"refreshToken"
+								],
+								"type": "object"
+							}
+						}
+					}
+				}
+			}
+		}
+	},
+	"servers": [
+		{
+			"url": "/"
+		}
+	]
+}

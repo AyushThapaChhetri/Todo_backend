@@ -69,9 +69,12 @@ class _AuthService {
         { expiresIn: "15m", algorithm: "HS256" }
       );
 
+      console.log("Access Token from Service :", accessToken);
       //Generate refresh Token
       const refreshToken = crypto.randomBytes(64).toString("hex");
       const expiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
+
+      console.log("Refresh Token from Service :", accessToken);
 
       await RefreshTokenRepository.create(user.id, refreshToken, expiresAt);
 
