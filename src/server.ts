@@ -1,6 +1,6 @@
 import express, { NextFunction, Request, Response } from "express";
 import cors from "cors";
-import controllers from "./controller/routing/controllers";
+// import controllers from "./controller/routing/controllers";
 import { ENVIRONMENT, ALLOWED_ORIGINS, PORT } from "./config/config";
 // const { swaggerUi, swaggerSpec } = require("../swagger");
 import { RegisterRoutes } from "./tsoa/routes.ts/routes"; // tsoa-generated routes
@@ -71,7 +71,7 @@ app.use(express.urlencoded({ extended: false }));
 // app.use("/", authRoutes);
 
 // Use the auth routes
-app.use("/api", ...controllers);
+// app.use("/api", ...controllers);
 
 // Register tsoa routes
 RegisterRoutes(app);

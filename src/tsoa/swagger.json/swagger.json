@@ -7,6 +7,513 @@
 		"requestBodies": {},
 		"responses": {},
 		"schemas": {
+			"FieldError": {
+				"properties": {
+					"field": {
+						"type": "string",
+						"example": "fieldName"
+					},
+					"message": {
+						"type": "string",
+						"example": "Validation error message"
+					}
+				},
+				"required": [
+					"field",
+					"message"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ValidationErrorResponse": {
+				"properties": {
+					"message": {
+						"type": "string",
+						"example": "Validation failed"
+					},
+					"errors": {
+						"items": {
+							"$ref": "#/components/schemas/FieldError"
+						},
+						"type": "array",
+						"description": "Detailed list of field errors"
+					}
+				},
+				"required": [
+					"message",
+					"errors"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"BadRequestErrorResponse": {
+				"properties": {
+					"message": {
+						"type": "string",
+						"example": "Invalid input"
+					}
+				},
+				"required": [
+					"message"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ApiResponse__fullName-string--email-string--gender-string--dob-string--createdAt-string__": {
+				"properties": {
+					"statusCode": {
+						"type": "number",
+						"format": "double",
+						"example": 200
+					},
+					"message": {
+						"type": "string"
+					},
+					"data": {
+						"properties": {
+							"createdAt": {
+								"type": "string"
+							},
+							"dob": {
+								"type": "string"
+							},
+							"gender": {
+								"type": "string"
+							},
+							"email": {
+								"type": "string"
+							},
+							"fullName": {
+								"type": "string"
+							}
+						},
+						"required": [
+							"createdAt",
+							"dob",
+							"gender",
+							"email",
+							"fullName"
+						],
+						"type": "object"
+					}
+				},
+				"required": [
+					"statusCode",
+					"message",
+					"data"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"CreateTodoResponse": {
+				"properties": {
+					"message": {
+						"type": "string",
+						"example": "Todo Insert Successful"
+					},
+					"data": {
+						"properties": {
+							"createdAt": {
+								"type": "string"
+							},
+							"userId": {
+								"type": "number",
+								"format": "double"
+							},
+							"secondsTime": {
+								"type": "string"
+							},
+							"minutesTime": {
+								"type": "string"
+							},
+							"hoursTime": {
+								"type": "string"
+							},
+							"endDate": {
+								"type": "string"
+							},
+							"startDate": {
+								"type": "string"
+							},
+							"progressStatus": {
+								"type": "string"
+							},
+							"priority": {
+								"type": "string"
+							},
+							"taskName": {
+								"type": "string"
+							},
+							"projectName": {
+								"type": "string"
+							},
+							"id": {
+								"type": "string"
+							}
+						},
+						"required": [
+							"createdAt",
+							"userId",
+							"progressStatus",
+							"priority",
+							"taskName",
+							"projectName",
+							"id"
+						],
+						"type": "object",
+						"example": {
+							"id": "26",
+							"projectName": "Hero",
+							"taskName": "Running Down",
+							"priority": "low",
+							"progressStatus": "progress",
+							"startDate": "2025-04-22T12:00:20.160Z",
+							"endDate": "2025-04-23T12:00:20.160Z",
+							"hoursTime": 0,
+							"minutesTime": 0,
+							"secondsTime": 0,
+							"userId": 1,
+							"createdAt": "2025-04-22T12:00:20.160Z"
+						}
+					},
+					"statusCode": {
+						"type": "number",
+						"format": "double",
+						"example": 200
+					}
+				},
+				"required": [
+					"message",
+					"data",
+					"statusCode"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"CreateTodoRequest": {
+				"properties": {
+					"projectName": {
+						"type": "string",
+						"example": "My Project"
+					},
+					"taskName": {
+						"type": "string",
+						"example": "Do laundry"
+					},
+					"priority": {
+						"type": "string",
+						"enum": [
+							"low",
+							"medium",
+							"high"
+						],
+						"example": "medium"
+					},
+					"progressStatus": {
+						"type": "string",
+						"enum": [
+							"todo",
+							"progress",
+							"completed"
+						],
+						"example": "todo"
+					},
+					"startDate": {
+						"type": "string",
+						"example": "2025-04-22T12:00:20.160Z"
+					},
+					"endDate": {
+						"type": "string",
+						"example": "2025-04-23T12:00:20.160Z"
+					},
+					"hoursTime": {
+						"type": "string",
+						"example": ""
+					},
+					"minutesTime": {
+						"type": "string",
+						"example": ""
+					},
+					"secondsTime": {
+						"type": "string",
+						"example": ""
+					}
+				},
+				"required": [
+					"projectName",
+					"taskName",
+					"priority",
+					"progressStatus"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"TodoItem": {
+				"properties": {
+					"id": {
+						"type": "string",
+						"example": "26"
+					},
+					"projectName": {
+						"type": "string",
+						"example": "Build a Cup"
+					},
+					"taskName": {
+						"type": "string",
+						"example": "Design the cup"
+					},
+					"priority": {
+						"type": "string",
+						"example": "low"
+					},
+					"progressStatus": {
+						"type": "string",
+						"example": "todo"
+					},
+					"startDate": {
+						"type": "string",
+						"example": ""
+					},
+					"endDate": {
+						"type": "string",
+						"example": ""
+					},
+					"hoursTime": {
+						"type": "string",
+						"example": "3"
+					},
+					"minutesTime": {
+						"type": "string",
+						"example": "2"
+					},
+					"secondsTime": {
+						"type": "string",
+						"example": "4"
+					},
+					"userId": {
+						"type": "number",
+						"format": "double",
+						"example": 1
+					},
+					"createdAt": {
+						"type": "string",
+						"example": "2025-04-22T12:00:20.160Z"
+					}
+				},
+				"required": [
+					"id",
+					"projectName",
+					"taskName",
+					"priority",
+					"progressStatus",
+					"startDate",
+					"endDate",
+					"hoursTime",
+					"minutesTime",
+					"secondsTime",
+					"userId",
+					"createdAt"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"TodosResponse": {
+				"properties": {
+					"statusCode": {
+						"type": "number",
+						"format": "double",
+						"example": 200
+					},
+					"message": {
+						"type": "string",
+						"example": "Todos retrieved successfully"
+					},
+					"data": {
+						"items": {
+							"$ref": "#/components/schemas/TodoItem"
+						},
+						"type": "array"
+					}
+				},
+				"required": [
+					"statusCode",
+					"message",
+					"data"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"UpdateTodoResponse": {
+				"properties": {
+					"message": {
+						"type": "string",
+						"example": "Todo updated successfully"
+					},
+					"data": {
+						"properties": {
+							"createdAt": {
+								"type": "string"
+							},
+							"userId": {
+								"type": "number",
+								"format": "double"
+							},
+							"secondsTime": {
+								"type": "string"
+							},
+							"minutesTime": {
+								"type": "string"
+							},
+							"hoursTime": {
+								"type": "string"
+							},
+							"endDate": {
+								"type": "string"
+							},
+							"startDate": {
+								"type": "string"
+							},
+							"progressStatus": {
+								"type": "string"
+							},
+							"priority": {
+								"type": "string"
+							},
+							"taskName": {
+								"type": "string"
+							},
+							"projectName": {
+								"type": "string"
+							},
+							"id": {
+								"type": "string"
+							}
+						},
+						"required": [
+							"createdAt",
+							"userId",
+							"secondsTime",
+							"minutesTime",
+							"hoursTime",
+							"endDate",
+							"startDate",
+							"progressStatus",
+							"priority",
+							"taskName",
+							"projectName",
+							"id"
+						],
+						"type": "object",
+						"example": {
+							"id": "26",
+							"projectName": "sdfasdf",
+							"taskName": "sdfdsfasf",
+							"priority": "low",
+							"progressStatus": "todo",
+							"startDate": "2025-04-22T12:00:20.160Z",
+							"endDate": "",
+							"hoursTime": "3",
+							"minutesTime": "2",
+							"secondsTime": "4",
+							"userId": 1,
+							"createdAt": "2025-04-22T12:00:20.160Z"
+						}
+					},
+					"statusCode": {
+						"type": "number",
+						"format": "double",
+						"example": 200
+					}
+				},
+				"required": [
+					"message",
+					"data",
+					"statusCode"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"UpdateTodoRequest": {
+				"properties": {
+					"projectName": {
+						"type": "string",
+						"example": "New project name"
+					},
+					"taskName": {
+						"type": "string",
+						"example": "New task name"
+					},
+					"priority": {
+						"type": "string",
+						"enum": [
+							"low",
+							"medium",
+							"high"
+						],
+						"example": "low"
+					},
+					"progressStatus": {
+						"type": "string",
+						"enum": [
+							"todo",
+							"progress",
+							"completed"
+						],
+						"example": "progress"
+					},
+					"startDate": {
+						"type": "string",
+						"example": "2025-04-22T12:00:20.160Z"
+					},
+					"endDate": {
+						"type": "string",
+						"example": "2025-04-23T12:00:20.160Z"
+					},
+					"hoursTime": {
+						"type": "string",
+						"example": "3"
+					},
+					"minutesTime": {
+						"type": "string",
+						"example": "2"
+					},
+					"secondsTime": {
+						"type": "string",
+						"example": "4"
+					}
+				},
+				"type": "object",
+				"additionalProperties": false
+			},
+			"Record_string.never_": {
+				"properties": {},
+				"type": "object",
+				"description": "Construct a type with a set of properties K of type T"
+			},
+			"DeleteTodoResponse": {
+				"properties": {
+					"message": {
+						"type": "string",
+						"example": "Todo deleted successfully"
+					},
+					"data": {
+						"$ref": "#/components/schemas/Record_string.never_",
+						"example": {}
+					},
+					"statusCode": {
+						"type": "number",
+						"format": "double",
+						"example": 200
+					}
+				},
+				"required": [
+					"message",
+					"data",
+					"statusCode"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
 			"UserResponseData": {
 				"properties": {
 					"fullName": {
@@ -77,44 +584,15 @@
 				"type": "object",
 				"additionalProperties": false
 			},
-			"FieldError": {
+			"InternalErrorResponse": {
 				"properties": {
-					"field": {
-						"type": "string",
-						"description": "Name of the invalid field",
-						"example": "emailName"
-					},
 					"message": {
 						"type": "string",
-						"description": "Error message for this field",
-						"example": "Please Enter Email"
+						"example": "Internal server error"
 					}
 				},
 				"required": [
-					"field",
 					"message"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"ValidationErrorResponse": {
-				"properties": {
-					"message": {
-						"type": "string",
-						"description": "General error message",
-						"example": "Validation failed"
-					},
-					"errors": {
-						"items": {
-							"$ref": "#/components/schemas/FieldError"
-						},
-						"type": "array",
-						"description": "Detailed list of field errors"
-					}
-				},
-				"required": [
-					"message",
-					"errors"
 				],
 				"type": "object",
 				"additionalProperties": false
@@ -214,24 +692,11 @@
 				"type": "object",
 				"additionalProperties": false
 			},
-			"BadRequestErrorResponse": {
-				"properties": {
-					"message": {
-						"type": "string",
-						"example": "Invalid input"
-					}
-				},
-				"required": [
-					"message"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
 			"UnauthorizedErrorResponse": {
 				"properties": {
 					"error": {
 						"type": "string",
-						"example": "Invalid email or password"
+						"example": "Unauthorized error message"
 					}
 				},
 				"required": [
@@ -249,19 +714,6 @@
 				},
 				"required": [
 					"error"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"InternalErrorResponse": {
-				"properties": {
-					"message": {
-						"type": "string",
-						"example": "Internal server error"
-					}
-				},
-				"required": [
-					"message"
 				],
 				"type": "object",
 				"additionalProperties": false
@@ -288,6 +740,84 @@
 				],
 				"type": "object",
 				"additionalProperties": false
+			},
+			"RefreshTokenResponseData": {
+				"properties": {
+					"accessToken": {
+						"type": "string",
+						"example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJmMTRmNmFiZS0yYWMwLTRjOTYtYWNhYi1iZjEyYmUzN2MzMjgiLCJpYXQiOjE3NDU4MTQxMTUsImV4cCI6MTc0NTgxNTAxNX0.H0R3aIgNavPHuelTMYO7j-UzL3CIB1J9LMctAA9Wubs"
+					},
+					"refreshToken": {
+						"type": "string",
+						"example": "8fc59bfb4b3952be60d003d40ec97343bda2b3d3d4600e3c6574f2a0d789696ddf8896bdf29c21a1092d78a884193230a4ee97a2dabb52c972ee605be980d1a2"
+					}
+				},
+				"required": [
+					"accessToken",
+					"refreshToken"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"RefreshTokenResponse": {
+				"properties": {
+					"message": {
+						"type": "string",
+						"example": "Token Refreshed Successfully"
+					},
+					"data": {
+						"$ref": "#/components/schemas/RefreshTokenResponseData"
+					},
+					"statusCode": {
+						"type": "number",
+						"format": "double",
+						"example": 200
+					}
+				},
+				"required": [
+					"message",
+					"data",
+					"statusCode"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"RefreshTokenRequest": {
+				"properties": {
+					"refreshToken": {
+						"type": "string",
+						"example": "8fc59bfb4b3952be60d003d40ec97343bda2b3d3d4600e3c6574f2a0d789696ddf8896bdf29c21a1092d78a884193230a4ee97a2dabb52c972ee605be980d1a2"
+					}
+				},
+				"required": [
+					"refreshToken"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"LogoutResponse": {
+				"properties": {
+					"message": {
+						"type": "string",
+						"example": "Logged out successfully"
+					},
+					"data": {
+						"$ref": "#/components/schemas/Record_string.never_",
+						"example": {}
+					},
+					"statusCode": {
+						"type": "number",
+						"format": "double",
+						"example": 200
+					}
+				},
+				"required": [
+					"message",
+					"data",
+					"statusCode"
+				],
+				"type": "object",
+				"additionalProperties": false
 			}
 		},
 		"securitySchemes": {
@@ -307,12 +837,309 @@
 		"contact": {}
 	},
 	"paths": {
+		"/api/user/me": {
+			"get": {
+				"operationId": "GetProfile",
+				"responses": {
+					"200": {
+						"description": "User info fetched successfully",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ApiResponse__fullName-string--email-string--gender-string--dob-string--createdAt-string__"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "BadRequestError",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/BadRequestErrorResponse"
+								}
+							}
+						}
+					},
+					"422": {
+						"description": "Validation failed",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ValidationErrorResponse"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"User"
+				],
+				"security": [
+					{
+						"jwt": []
+					}
+				],
+				"parameters": []
+			}
+		},
+		"/api/client/todos": {
+			"post": {
+				"operationId": "Create",
+				"responses": {
+					"200": {
+						"description": "Todo Insert Successful",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/CreateTodoResponse"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "BadRequestError",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/BadRequestErrorResponse"
+								}
+							}
+						}
+					},
+					"422": {
+						"description": "Validation failed",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ValidationErrorResponse"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Todos"
+				],
+				"security": [
+					{
+						"jwt": []
+					}
+				],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/CreateTodoRequest"
+							}
+						}
+					}
+				}
+			},
+			"get": {
+				"operationId": "ReadAll",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/TodosResponse"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Todos"
+				],
+				"security": [
+					{
+						"jwt": []
+					}
+				],
+				"parameters": []
+			}
+		},
+		"/api/client/todos/{id}": {
+			"put": {
+				"operationId": "Update",
+				"responses": {
+					"200": {
+						"description": "Todo updated successfully",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/UpdateTodoResponse"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "BadRequestError",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/BadRequestErrorResponse"
+								}
+							}
+						}
+					},
+					"422": {
+						"description": "Validation failed",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ValidationErrorResponse"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Todos"
+				],
+				"security": [
+					{
+						"jwt": []
+					}
+				],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "id",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/UpdateTodoRequest"
+							}
+						}
+					}
+				}
+			},
+			"patch": {
+				"operationId": "PatchUpdate",
+				"responses": {
+					"200": {
+						"description": "Todo partially updated successfully",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/UpdateTodoResponse"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "BadRequestError",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/BadRequestErrorResponse"
+								}
+							}
+						}
+					},
+					"422": {
+						"description": "Validation failed",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ValidationErrorResponse"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Todos"
+				],
+				"security": [
+					{
+						"jwt": []
+					}
+				],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "id",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/UpdateTodoRequest"
+							}
+						}
+					}
+				}
+			},
+			"delete": {
+				"operationId": "Delete",
+				"responses": {
+					"200": {
+						"description": "Todo Deleted Successfully",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/DeleteTodoResponse"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "BadRequest",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/BadRequestErrorResponse"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Todos"
+				],
+				"security": [
+					{
+						"jwt": []
+					}
+				],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "id",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			}
+		},
 		"/api/auth/signup": {
 			"post": {
 				"operationId": "Signup",
 				"responses": {
 					"200": {
-						"description": "Ok",
+						"description": "SignUp successful",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -350,6 +1177,16 @@
 											]
 										}
 									}
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Internal server error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/InternalErrorResponse"
 								}
 							}
 						}
@@ -422,6 +1259,19 @@
 							"application/json": {
 								"schema": {
 									"$ref": "#/components/schemas/ValidationErrorResponse"
+								},
+								"examples": {
+									"Example 1": {
+										"value": {
+											"message": "Validation failed",
+											"errors": [
+												{
+													"field": "emailName",
+													"message": "Please Enter Email"
+												}
+											]
+										}
+									}
 								}
 							}
 						}
@@ -459,10 +1309,79 @@
 				"operationId": "Refresh",
 				"responses": {
 					"200": {
-						"description": "Ok",
+						"description": "Token Refreshed Successfully",
 						"content": {
 							"application/json": {
-								"schema": {}
+								"schema": {
+									"$ref": "#/components/schemas/RefreshTokenResponse"
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "Unauthorized",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/UnauthorizedErrorResponse"
+								},
+								"examples": {
+									"Example 1": {
+										"value": {
+											"error": "Refresh token expired"
+										}
+									}
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "Not Found",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/UserNotFoundErrorResponse"
+								},
+								"examples": {
+									"Example 1": {
+										"value": {
+											"error": "User not found"
+										}
+									}
+								}
+							}
+						}
+					},
+					"422": {
+						"description": "Validation Failed",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ValidationErrorResponse"
+								},
+								"examples": {
+									"Example 1": {
+										"value": {
+											"message": "Validation failed",
+											"errors": [
+												{
+													"field": "refreshToken",
+													"message": "Refresh token is required"
+												}
+											]
+										}
+									}
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Internal server error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/InternalErrorResponse"
+								}
 							}
 						}
 					}
@@ -477,15 +1396,7 @@
 					"content": {
 						"application/json": {
 							"schema": {
-								"properties": {
-									"refreshToken": {
-										"type": "string"
-									}
-								},
-								"required": [
-									"refreshToken"
-								],
-								"type": "object"
+								"$ref": "#/components/schemas/RefreshTokenRequest"
 							}
 						}
 					}
@@ -497,10 +1408,62 @@
 				"operationId": "Logout",
 				"responses": {
 					"200": {
-						"description": "Ok",
+						"description": "LoggedOut Successfully",
 						"content": {
 							"application/json": {
-								"schema": {}
+								"schema": {
+									"$ref": "#/components/schemas/LogoutResponse"
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "Unauthorized",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/UnauthorizedErrorResponse"
+								},
+								"examples": {
+									"Example 1": {
+										"value": {
+											"error": "Refresh token Invalid"
+										}
+									}
+								}
+							}
+						}
+					},
+					"422": {
+						"description": "Validation error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ValidationErrorResponse"
+								},
+								"examples": {
+									"Example 1": {
+										"value": {
+											"message": "Validation failed",
+											"errors": [
+												{
+													"field": "refreshToken",
+													"message": "Refresh Token is Required"
+												}
+											]
+										}
+									}
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Internal server error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/InternalErrorResponse"
+								}
 							}
 						}
 					}
@@ -515,15 +1478,7 @@
 					"content": {
 						"application/json": {
 							"schema": {
-								"properties": {
-									"refreshToken": {
-										"type": "string"
-									}
-								},
-								"required": [
-									"refreshToken"
-								],
-								"type": "object"
+								"$ref": "#/components/schemas/RefreshTokenRequest"
 							}
 						}
 					}

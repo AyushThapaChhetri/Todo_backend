@@ -1,6 +1,6 @@
 import { Example } from "tsoa";
 
 export class UnauthorizedErrorResponse {
-  @Example("Invalid email or password")
+  @Example("Unauthorized error message")
   error!: string;
 }

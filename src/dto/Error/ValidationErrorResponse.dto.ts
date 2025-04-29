@@ -2,26 +2,14 @@
 import { Example } from "tsoa";
 
 export class FieldError {
-  /**
-   * Name of the invalid field
-   * @example "emailName"
-   */
-  @Example("emailName")
+  @Example("fieldName")
   field!: string;
 
-  /**
-   * Error message for this field
-   * @example "Please Enter Email"
-   */
-  @Example("Please Enter Email")
+  @Example("Validation error message")
   message!: string;
 }
 
 export class ValidationErrorResponse {
-  /**
-   * General error message
-   * @example "Validation failed"
-   */
   @Example("Validation failed")
   message!: string;
 

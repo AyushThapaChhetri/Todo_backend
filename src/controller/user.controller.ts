@@ -1,13 +1,31 @@
 import BaseController from "./contract/baseController.contract";
-import UserService from "../repository/user/user.repository";
-import { Request, Response } from "express";
+import { Request as ExRequest } from "express";
 import { BadRequestError } from "@app/service/contract/errors/errors";
-import { UserDTO } from "@app/dto/user/user.dto";
+import { UserDTO } from "../dto/user/user.dto";
+import {
+  Get,
+  Request,
+  Response,
+  Route,
+  Security,
+  SuccessResponse,
+  Tags,
+} from "tsoa";
+import { ValidationErrorResponse } from "../dto/Error/ValidationErrorResponse.dto";
+import { BadRequestErrorResponse } from "../dto/Error/BadRequestErrorResponse.dto";
+import userService from "@app/service/user/user.service";
 
-class _UserController extends BaseController {
-  async getProfile(req: Request, res: Response) {
-    const id = req.user.id;
-    const userProfile = await UserService.findById(id);
+@Response<ValidationErrorResponse>(422, "Validation failed")
+@Response<BadRequestErrorResponse>(400, "BadRequestError")
+@Route("api/user")
+@Tags("User")
+export class _UserController extends BaseController {
+  @Security("jwt")
+  @SuccessResponse("200", "User info fetched successfully")
+  @Get("me")
+  async getProfile(@Request() request: ExRequest) {
+    const id = request.user.id;
+    const userProfile = await userService.getCurrentUser(id);
     if (!userProfile) {
       throw new BadRequestError("User not found or not authenticated");
     }
@@ -16,9 +34,9 @@ class _UserController extends BaseController {
 
     return super.getOk({
       message: "Profile Fetch Successful",
-      data: UserDTO.single(req.user),
+      data: UserDTO.single(request.user),
     });
   }
 }
 
-export const UserController = new _UserController();
+// export const UserController = new _UserController();

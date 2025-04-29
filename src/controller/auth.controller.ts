@@ -37,10 +37,16 @@ import { UserNotFoundErrorResponse } from "../dto/Error/UserNotFoundErrorRespons
 import { InternalErrorResponse } from "../dto/Error/InternalErrorResponse.dto";
 import { LoginResponse } from "../dto/user/LoginResponse.dto";
 import { LoginRequest } from "../dto/user/LoginRequest.dto";
+import {
+  RefreshTokenRequest,
+  RefreshTokenResponse,
+} from "../dto/refreshToken/RefreshToken.dto";
+import { LogoutResponse } from "../dto/user/LogoutResponse.dto";
 
 @Route("api/auth")
 @Tags("Auth")
 export class _AuthController extends BaseController {
+  @SuccessResponse("200", "SignUp successful")
   @Response<ErrorResponse>(409, "Conflict - email already registered")
   @Response<ValidationErrorResponse>(
     422,
@@ -50,6 +56,7 @@ export class _AuthController extends BaseController {
       errors: [{ field: "emailName", message: "Please Enter Email" }],
     }
   )
+  @Response<InternalErrorResponse>(500, "Internal server error")
   @Post("signup")
   @Middlewares(validate_schemas(signupValidationSchema))
   public async signup(
@@ -82,7 +89,10 @@ export class _AuthController extends BaseController {
   @Response<BadRequestErrorResponse>(400, "Invalid input")
   @Response<UnauthorizedErrorResponse>(401, "Unauthorized – wrong credentials")
   @Response<UserNotFoundErrorResponse>(404, "User not found")
-  @Response<ValidationErrorResponse>(422, "Validation error")
+  @Response<ValidationErrorResponse>(422, "Validation error", {
+    message: "Validation failed",
+    errors: [{ field: "emailName", message: "Please Enter Email" }],
+  })
   @Response<InternalErrorResponse>(500, "Internal server error")
   @Middlewares(validate_schemas(loginValidationSchema))
   // async login(req: Request, res: Response) {
@@ -147,13 +157,26 @@ export class _AuthController extends BaseController {
 
   // async refresh(req: Request, res: Response) {
   // const { refreshToken } = req.body;
-
+  @SuccessResponse("200", "Token Refreshed Successfully")
+  @Response<UnauthorizedErrorResponse>(401, "Unauthorized", {
+    error: "Refresh token expired",
+  })
+  @Response<UserNotFoundErrorResponse>(404, "Not Found", {
+    error: "User not found",
+  })
+  @Response<ValidationErrorResponse>(422, "Validation Failed", {
+    message: "Validation failed",
+    errors: [{ field: "refreshToken", message: "Refresh token is required" }],
+  })
+  @Response<InternalErrorResponse>(500, "Internal server error")
   @Middlewares(validate_schemas(refreshTokenValidationSchema))
   @Post("refresh")
   public async refresh(
-    @Body() refreshData: { refreshToken: string }
-  ): Promise<any> {
+    @Body() refreshData: RefreshTokenRequest
+  ): Promise<RefreshTokenResponse> {
     const { refreshToken } = refreshData;
+    console.log("Refresh Token from controller: ");
+    console.log("Refresh Token from controller: ", refreshToken);
 
     if (!refreshToken) {
       throw new BadRequestError("Refresh token is required");
@@ -163,7 +186,7 @@ export class _AuthController extends BaseController {
       await AuthService.refreshToken(refreshToken);
 
     return super.postOk({
-      message: "Login successful",
+      message: "Token Refreshed Successfully",
       data: {
         accessToken, // Include the generated token
         refreshToken: newRefreshToken,
@@ -175,10 +198,20 @@ export class _AuthController extends BaseController {
   //   // console.log("Delete controller");
   //   const { refreshToken } = req.body;
   // console.log("Refresh Token", refreshToken);
+  @SuccessResponse("200", "LoggedOut Successfully")
+  @Response<ValidationErrorResponse>(422, "Validation error", {
+    message: "Validation failed",
+    errors: [{ field: "refreshToken", message: "Refresh Token is Required" }],
+  })
+  @Response<UnauthorizedErrorResponse>(401, "Unauthorized", {
+    error: "Refresh token Invalid",
+  })
+  @Response<InternalErrorResponse>(500, "Internal server error")
+  @Middlewares(validate_schemas(refreshTokenValidationSchema))
   @Post("logout")
   public async logout(
-    @Body() logoutData: { refreshToken: string }
-  ): Promise<any> {
+    @Body() logoutData: RefreshTokenRequest
+  ): Promise<LogoutResponse> {
     const { refreshToken } = logoutData;
     if (!refreshToken) {
       // return res.status(400).json({ error: "Refresh token is required" });
@@ -219,4 +252,4 @@ export class _AuthController extends BaseController {
   // }
 }
 
-// export const AuthController = new _AuthController();
+export const AuthController = new _AuthController();

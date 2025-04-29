@@ -8,3 +8,5 @@ class _UserService {
     return userProfile;
   }
 }
+
+export default new _UserService();
