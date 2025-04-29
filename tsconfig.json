@@ -35,6 +35,8 @@
     // }
 
     "paths": {
+      "tsoa": ["node_modules/tsoa/dist"],
+      "tsoa/": ["node_modules/tsoa/dist/"],
       // "@app/*": ["src/*", "dist/*"]
       "@app/*": ["src/*"]
     } /* Specify a set of entries that re-map imports to additional lookup locations. */,

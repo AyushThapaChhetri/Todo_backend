@@ -1,8 +1,12 @@
 import express, { NextFunction, Request, Response } from "express";
 import cors from "cors";
-import controllers from "./controller/routing/controllers";
+// import controllers from "./controller/routing/controllers";
 import { ENVIRONMENT, ALLOWED_ORIGINS, PORT } from "./config/config";
-const { swaggerUi, swaggerSpec } = require("../swagger");
+// const { swaggerUi, swaggerSpec } = require("../swagger");
+import { RegisterRoutes } from "./tsoa/routes.ts/routes"; // tsoa-generated routes
+import swaggerUi from "swagger-ui-express";
+import * as swaggerSpec from "./tsoa/swagger.json/swagger.json"; // tsoa-generated spec
+import { errorHandler } from "./service/contract/errors/errorHandler";
 
 // Node.js comes with a built-in module called http, but it requires a lot of code to create a server.
 // Express simplifies this process by providing an easier way to handle requests, routes, and middleware.
@@ -67,19 +71,26 @@ app.use(express.urlencoded({ extended: false }));
 // app.use("/", authRoutes);
 
 // Use the auth routes
-app.use("/api", ...controllers);
+// app.use("/api", ...controllers);
+
+// Register tsoa routes
+RegisterRoutes(app);
 
 // Add Swagger UI at /api-docs
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
+// Global error handler (catches all thrown errors, including your 409 Conflict)
+// Add global error handling middleware
+app.use(errorHandler);
+
 // Global error-handling middleware with proper types
-app.use((err: any, req: Request, res: Response, next: NextFunction) => {
-  console.error("Global Error Handler:", err);
-  const status = err.statusCode || 500;
-  res.status(status).json({
-    message: err.message || "Something went wrong",
-  });
-});
+// app.use((err: any, req: Request, res: Response, next: NextFunction) => {
+//   console.error("Global Error Handler:", err);
+//   const status = err.statusCode || 500;
+//   res.status(status).json({
+//     message: err.message || "Something went wrong",
+//   });
+// });
 
 app.listen(PORT as number, "0.0.0.0", () => {
   console.log(`Server running on http://0.0.0.0:${PORT}`);

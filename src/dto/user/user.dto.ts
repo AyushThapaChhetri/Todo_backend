@@ -6,8 +6,8 @@ class _UserDTO {
       fullName: user.fullName,
       email: user.email,
       gender: user.gender,
-      dob: user.dob,
-      createdAt: user.createdAt,
+      dob: user.dob.toISOString(),
+      createdAt: user.createdAt.toISOString(),
     };
   }
 }

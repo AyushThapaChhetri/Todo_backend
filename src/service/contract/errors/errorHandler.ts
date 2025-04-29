@@ -42,5 +42,34 @@ class _HttpErrorHandler {
       }
     };
   }
+
+  // New static method for global error handling with tsoa
+  public static errorHandler(
+    err: any,
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) {
+    // Log the error (similar to the original log method)
+    console.error(err);
+    console.error(JSON.stringify(err, undefined, "  "));
+
+    // Handle specific error types
+    if (err instanceof BadRequestError) {
+      res.status(err.statusCode).json({ message: err.message });
+    } else if (err instanceof UnauthorizedError) {
+      res.status(err.statusCode).json({ message: err.message });
+    } else if (err instanceof DBError) {
+      res.status(err.statusCode).json({ message: err.message });
+    } else {
+      // Fallback for unhandled errors
+      const statusCode = err.statusCode || 500;
+      res
+        .status(statusCode)
+        .json({ message: err.message || "Something went wrong" });
+    }
+  }
 }
 export const HttpErrorHandler = new _HttpErrorHandler();
+
+export const errorHandler = _HttpErrorHandler.errorHandler;

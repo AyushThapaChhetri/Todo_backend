@@ -9,7 +9,7 @@ import Hash from "src/libs/Hash";
 import { UserRepository } from "src/repository/auth/register.repository";
 import * as jwt from "jsonwebtoken";
 import crypto from "crypto";
-import { JWT_SECRET } from "@app/config/config";
+import { JWT_EXPIRES_IN, JWT_SECRET } from "@app/config/config";
 import RefreshTokenRepository from "@app/repository/auth/refreshToken.repository";
 
 class _AuthService {
@@ -66,12 +66,15 @@ class _AuthService {
           userId: user.uid,
         },
         JWT_SECRET,
-        { expiresIn: "15m", algorithm: "HS256" }
+        { expiresIn: JWT_EXPIRES_IN, algorithm: "HS256" }
       );
 
+      console.log("Access Token from Service :", accessToken);
       //Generate refresh Token
       const refreshToken = crypto.randomBytes(64).toString("hex");
       const expiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
+
+      console.log("Refresh Token from Service :", accessToken);
 
       await RefreshTokenRepository.create(user.id, refreshToken, expiresAt);
 
@@ -80,7 +83,10 @@ class _AuthService {
   }
 
   async refreshToken(refreshToken: string) {
-    console.log("Received refresh token request for:", refreshToken);
+    console.log(
+      "Received refresh token for refreshing request (service):",
+      refreshToken
+    );
     const tokenRecord = await RefreshTokenRepository.findByToken(refreshToken);
 
     if (!tokenRecord) {
@@ -106,9 +112,10 @@ class _AuthService {
     console.log("Generating new access token...");
     // Generate new access token
     const newAccessToken = jwt.sign({ userId: user.uid }, JWT_SECRET, {
-      expiresIn: "15m",
+      expiresIn: JWT_EXPIRES_IN,
       algorithm: "HS256",
     });
+    console.log("new access token from service layer: ", newAccessToken);
 
     console.log("Generating new refresh token...");
     // Refresh token rotation: invalidate old token, issue new one
@@ -117,9 +124,11 @@ class _AuthService {
 
     console.log("Deleting old refresh token...");
     await RefreshTokenRepository.deleteByToken(refreshToken);
+    console.log("Old refresh token deleted");
 
     console.log("Storing new refresh token...");
     await RefreshTokenRepository.create(user.id, newRefreshToken, newExpiresAt);
+    console.log("Stored new refresh Token: ", newRefreshToken);
 
     console.log("New tokens generated successfully");
     return { accessToken: newAccessToken, refreshToken: newRefreshToken };
@@ -129,9 +138,7 @@ class _AuthService {
     const tokenRecord = await RefreshTokenRepository.findByToken(refreshToken);
 
     if (!tokenRecord) {
-      throw new UnauthorizedError(
-        "Refresh token not found or already invalidated"
-      );
+      throw new UnauthorizedError("Refresh token Invalid");
     }
     await RefreshTokenRepository.deleteByToken(refreshToken);
   }
