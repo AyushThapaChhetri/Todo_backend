@@ -3,24 +3,69 @@ import BaseRepository from "../contract/baseRepository";
 
 class _UserRepository extends BaseRepository {
   //INSERT INTO USER(id, email, password, fullName, gender, dob) VALUES(id, email, password, fullName, gender, dob);
+  // async create(params: {
+  //   email: string;
+  //   password: string;
+  //   fullName: string;
+  //   gender: string;
+  //   dob: Date;
+  // }) {
+  //   const { email, fullName, gender, password, dob } = params;
+  //   // Create the user in the database using Prisma
+  //   return super.dbCatch(
+  //     prisma.user.create({
+  //       data: {
+  //         createdAt: new Date(),
+  //         fullName,
+  //         email,
+  //         password, // Store the hashed password
+  //         gender,
+  //         dob, // Convert string to Date object
+  //       },
+  //     })
+  //   );
+  // }
   async create(params: {
+    firstName: string;
+    lastName: string;
     email: string;
     password: string;
-    fullName: string;
     gender: string;
-    dob: Date;
+    dob: Date; // Keep dob as a string, then convert it to Date later
+    address?: string;
+    phone?: string;
+    title?: string;
+    avatarUrl?: string;
   }) {
-    const { email, fullName, gender, password, dob } = params;
+    const {
+      firstName,
+      lastName,
+      email,
+      password,
+      gender,
+      dob,
+      address,
+      phone,
+      title,
+      avatarUrl,
+    } = params;
+
     // Create the user in the database using Prisma
     return super.dbCatch(
       prisma.user.create({
         data: {
           createdAt: new Date(),
-          fullName,
+          firstName,
+          lastName,
           email,
-          password, // Store the hashed password
+          password, // Store the hashed password (you should hash the password before saving)
           gender,
-          dob, // Convert string to Date object
+          // dob: new Date(dob), // Convert dob string to Date object
+          dob, // Convert dob string to Date object
+          address,
+          phone,
+          title,
+          avatarUrl,
         },
       })
     );

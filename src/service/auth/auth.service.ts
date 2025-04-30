@@ -13,14 +13,39 @@ import { JWT_EXPIRES_IN, JWT_SECRET } from "@app/config/config";
 import RefreshTokenRepository from "@app/repository/auth/refreshToken.repository";
 
 class _AuthService {
+  // async register(params: {
+  //   email: string;
+  //   password: string;
+  //   fullName: string;
+  //   gender: string;
+  //   dob: Date;
+  // }) {
+  //   const { email, password, dob, fullName, gender } = params;
+
   async register(params: {
+    firstName: string;
+    lastName: string;
     email: string;
     password: string;
-    fullName: string;
     gender: string;
-    dob: Date;
+    dob: Date; // Keep dob as string, then convert to Date later
+    address?: string;
+    phone?: string;
+    title?: string;
+    avatarUrl?: string;
   }) {
-    const { email, password, dob, fullName, gender } = params;
+    const {
+      firstName,
+      lastName,
+      email,
+      password,
+      gender,
+      dob,
+      address,
+      phone,
+      title,
+      avatarUrl,
+    } = params;
     // First check if the email already exists
     const existingUser = await prisma.user.findUnique({
       where: { email },
@@ -33,12 +58,25 @@ class _AuthService {
 
     const hashedPassword = await Hash.createHash(password);
 
+    // return UserRepository.create({
+    //   email,
+    //   password: hashedPassword,
+    //   dob,
+    //   fullName,
+    //   gender,
+    // });
+    // Create the user in the database
     return UserRepository.create({
+      firstName,
+      lastName,
       email,
       password: hashedPassword,
-      dob,
-      fullName,
       gender,
+      dob, // Convert dob to Date format
+      address,
+      phone,
+      title,
+      avatarUrl,
     });
   }
 

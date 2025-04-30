@@ -1,8 +1,13 @@
 import { Example } from "tsoa";
 
 export class SignupRequest {
+  // @Example("hero")
+  // fullName!: string;
   @Example("hero")
-  fullName!: string;
+  firstName!: string;
+
+  @Example("hero")
+  lastName!: string;
 
   @Example("hero@gmail.com")
   emailName!: string;
@@ -18,4 +23,16 @@ export class SignupRequest {
 
   @Example("2025-03-05")
   emailDob!: string;
+
+  @Example("123 Street, City")
+  address?: string;
+
+  @Example("9876543210")
+  phone?: string;
+
+  @Example("Software Engineer")
+  title?: string;
+
+  @Example("https://example.com/avatar.jpg")
+  avatarUrl?: string;
 }

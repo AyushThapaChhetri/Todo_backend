@@ -63,19 +63,31 @@ export class _AuthController extends BaseController {
     @Body() signupData: SignupRequest
   ): Promise<SignupResponse> {
     const {
-      fullName,
-      emailName: email, // Rename emailName to email to match schema
-      emailPassword: password,
+      // fullName,
+      firstName,
+      lastName,
+      emailName: email, // Renaming emailName to email
+      emailPassword: password, // Renaming emailPassword to password
+      emailConfirmPassword: confirmPassword, // Renaming emailConfirmPassword to confirmPassword
       gender,
-      emailDob: dob,
+      emailDob: dob, // Renaming emailDob to dob
+      address,
+      phone,
+      title,
+      avatarUrl,
     } = signupData;
 
     const user = await AuthService.register({
+      firstName,
+      lastName,
       email,
       password,
-      dob: new Date(dob),
-      fullName,
       gender,
+      dob: new Date(dob), // Ensure dob is converted to Date format
+      address,
+      phone,
+      title,
+      avatarUrl,
     });
 
     // Send success response

@@ -45,12 +45,12 @@ const models: TsoaRoute.Models = {
         "additionalProperties": false,
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-    "ApiResponse__fullName-string--email-string--gender-string--dob-string--createdAt-string__": {
+    "ApiResponse__firstName-string--lastName-string--email-string--gender-string--dob-string--address-string--phone-string--title-string--avatarUrl-string--createdAt-string__": {
         "dataType": "refObject",
         "properties": {
             "statusCode": {"dataType":"double","required":true},
             "message": {"dataType":"string","required":true},
-            "data": {"dataType":"nestedObjectLiteral","nestedProperties":{"createdAt":{"dataType":"string","required":true},"dob":{"dataType":"string","required":true},"gender":{"dataType":"string","required":true},"email":{"dataType":"string","required":true},"fullName":{"dataType":"string","required":true}},"required":true},
+            "data": {"dataType":"nestedObjectLiteral","nestedProperties":{"createdAt":{"dataType":"string","required":true},"avatarUrl":{"dataType":"string","required":true},"title":{"dataType":"string","required":true},"phone":{"dataType":"string","required":true},"address":{"dataType":"string","required":true},"dob":{"dataType":"string","required":true},"gender":{"dataType":"string","required":true},"email":{"dataType":"string","required":true},"lastName":{"dataType":"string","required":true},"firstName":{"dataType":"string","required":true}},"required":true},
         },
         "additionalProperties": false,
     },
@@ -154,10 +154,15 @@ const models: TsoaRoute.Models = {
     "UserResponseData": {
         "dataType": "refObject",
         "properties": {
-            "fullName": {"dataType":"string","required":true},
+            "firstName": {"dataType":"string","required":true},
+            "lastName": {"dataType":"string","required":true},
             "email": {"dataType":"string","required":true},
             "gender": {"dataType":"string","required":true},
             "dob": {"dataType":"string","required":true},
+            "address": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}]},
+            "phone": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}]},
+            "title": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}]},
+            "avatarUrl": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}]},
             "createdAt": {"dataType":"string","required":true},
         },
         "additionalProperties": false,
@@ -192,12 +197,17 @@ const models: TsoaRoute.Models = {
     "SignupRequest": {
         "dataType": "refObject",
         "properties": {
-            "fullName": {"dataType":"string","required":true},
+            "firstName": {"dataType":"string","required":true},
+            "lastName": {"dataType":"string","required":true},
             "emailName": {"dataType":"string","required":true},
             "emailPassword": {"dataType":"string","required":true},
             "emailConfirmPassword": {"dataType":"string","required":true},
             "gender": {"dataType":"union","subSchemas":[{"dataType":"enum","enums":["male"]},{"dataType":"enum","enums":["female"]},{"dataType":"enum","enums":["other"]}],"required":true},
             "emailDob": {"dataType":"string","required":true},
+            "address": {"dataType":"string"},
+            "phone": {"dataType":"string"},
+            "title": {"dataType":"string"},
+            "avatarUrl": {"dataType":"string"},
         },
         "additionalProperties": false,
     },

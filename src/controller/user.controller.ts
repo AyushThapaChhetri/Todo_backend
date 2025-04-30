@@ -30,7 +30,7 @@ export class _UserController extends BaseController {
       throw new BadRequestError("User not found or not authenticated");
     }
 
-    const { fullName, email, gender, dob } = userProfile;
+    const { firstName, lastName, email, gender, dob } = userProfile;
 
     return super.getOk({
       message: "Profile Fetch Successful",

@@ -59,7 +59,7 @@
 				"type": "object",
 				"additionalProperties": false
 			},
-			"ApiResponse__fullName-string--email-string--gender-string--dob-string--createdAt-string__": {
+			"ApiResponse__firstName-string--lastName-string--email-string--gender-string--dob-string--address-string--phone-string--title-string--avatarUrl-string--createdAt-string__": {
 				"properties": {
 					"statusCode": {
 						"type": "number",
@@ -74,6 +74,18 @@
 							"createdAt": {
 								"type": "string"
 							},
+							"avatarUrl": {
+								"type": "string"
+							},
+							"title": {
+								"type": "string"
+							},
+							"phone": {
+								"type": "string"
+							},
+							"address": {
+								"type": "string"
+							},
 							"dob": {
 								"type": "string"
 							},
@@ -83,16 +95,24 @@
 							"email": {
 								"type": "string"
 							},
-							"fullName": {
+							"lastName": {
+								"type": "string"
+							},
+							"firstName": {
 								"type": "string"
 							}
 						},
 						"required": [
 							"createdAt",
+							"avatarUrl",
+							"title",
+							"phone",
+							"address",
 							"dob",
 							"gender",
 							"email",
-							"fullName"
+							"lastName",
+							"firstName"
 						],
 						"type": "object"
 					}
@@ -516,9 +536,13 @@
 			},
 			"UserResponseData": {
 				"properties": {
-					"fullName": {
+					"firstName": {
 						"type": "string",
-						"example": "John Doe"
+						"example": "John"
+					},
+					"lastName": {
+						"type": "string",
+						"example": "Doe"
 					},
 					"email": {
 						"type": "string",
@@ -530,7 +554,27 @@
 					},
 					"dob": {
 						"type": "string",
-						"example": "1995-06-15T00:00:00.000Z"
+						"example": "1995-06-15"
+					},
+					"address": {
+						"type": "string",
+						"nullable": true,
+						"example": "123 Street, City"
+					},
+					"phone": {
+						"type": "string",
+						"nullable": true,
+						"example": "9876543210"
+					},
+					"title": {
+						"type": "string",
+						"nullable": true,
+						"example": "Software Engineer"
+					},
+					"avatarUrl": {
+						"type": "string",
+						"nullable": true,
+						"example": "https://example.com/avatar.jpg"
 					},
 					"createdAt": {
 						"type": "string",
@@ -538,7 +582,8 @@
 					}
 				},
 				"required": [
-					"fullName",
+					"firstName",
+					"lastName",
 					"email",
 					"gender",
 					"dob",
@@ -599,7 +644,11 @@
 			},
 			"SignupRequest": {
 				"properties": {
-					"fullName": {
+					"firstName": {
+						"type": "string",
+						"example": "hero"
+					},
+					"lastName": {
 						"type": "string",
 						"example": "hero"
 					},
@@ -627,10 +676,27 @@
 					"emailDob": {
 						"type": "string",
 						"example": "2025-03-05"
+					},
+					"address": {
+						"type": "string",
+						"example": "123 Street, City"
+					},
+					"phone": {
+						"type": "string",
+						"example": "9876543210"
+					},
+					"title": {
+						"type": "string",
+						"example": "Software Engineer"
+					},
+					"avatarUrl": {
+						"type": "string",
+						"example": "https://example.com/avatar.jpg"
 					}
 				},
 				"required": [
-					"fullName",
+					"firstName",
+					"lastName",
 					"emailName",
 					"emailPassword",
 					"emailConfirmPassword",
@@ -846,7 +912,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/ApiResponse__fullName-string--email-string--gender-string--dob-string--createdAt-string__"
+									"$ref": "#/components/schemas/ApiResponse__firstName-string--lastName-string--email-string--gender-string--dob-string--address-string--phone-string--title-string--avatarUrl-string--createdAt-string__"
 								}
 							}
 						}

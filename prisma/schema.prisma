@@ -7,6 +7,20 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+// Defining explicit enums for Role and Experience Level
+enum Role {
+  SUPER_ADMIN
+  ADMIN
+  USER
+}
+
+enum Level {
+  JUNIOR
+  MID_LEVEL
+  SENIOR
+  LEAD
+}
+
 // CREATE TABLE "User" (
 //     "id" SERIAL PRIMARY KEY,
 //     "uid" UUID DEFAULT gen_random_uuid() NOT NULL,
@@ -21,11 +35,18 @@ datasource db {
 model User {
   id Int @id @default(autoincrement())
   uid        String  @default(uuid())
-  fullName  String
+  firstName  String
+  lastName   String
   email     String   @unique
   password  String   // Only store the actual password
   gender    String
   dob       DateTime
+  address       String?         // optional
+  phone         String?         // optional
+  role          Role            @default(USER)
+  level         Level           @default(JUNIOR)
+  title String?
+  avatarUrl     String?         // store profile image URL
   createdAt DateTime @default(now())
   refreshTokens RefreshToken[]
   todos         Todo[]        // Added relation to Todo
